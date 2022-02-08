@@ -17,13 +17,13 @@ void ARunwayGeneratingActor::Initialize()
 {
 	if (!BasicTile)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Didn't set Basic Tile"));
+		UE_LOG(LogTemp, Error, TEXT("Didn't set Basic Tile"));
 		return;
 	}
 
 	FBox TileBounds = BasicTile->GetComponentsBoundingBox();
 	TileSize = TileBounds.Max - TileBounds.Min;
-	PathVanishDistance = TileSize.X * 3;
+	PathVanishDistance = TileSize.X * TileVanishLimit;
 	//UE_LOG(LogTemp, Warning, TEXT("TileSize: %f, %f, %f"), TileSize.X, TileSize.Y, TileSize.Z);
 }
 
@@ -35,6 +35,18 @@ void ARunwayGeneratingActor::BeginPlay()
 	Initialize();
 	
 	//SpawnTile(BasicTile);
+
+	// check if path was already generated (for the first time)
+	if (Path.IsEmpty())
+	{
+		for (int i = 0; i < QueueLimit; i++)
+		{
+			CurrentSpawnLocation += FVector(TileSize.X, 0.0f, 0.0f);
+			SpawnTile(BasicTile);
+			//UE_LOG(LogTemp, Warning, TEXT("TileSize: %f, %f, %f"), CurrentSpawnLocation.X, CurrentSpawnLocation.Y, CurrentSpawnLocation.Z);
+		}
+		return;
+	}
 }
 
 // Called every frame
@@ -49,33 +61,26 @@ void ARunwayGeneratingActor::GeneratePath()
 {
 	if (!PlayerCharacter)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Didn't set Player Character"));
-		return;
-	}
-
-	//UE_LOG(LogTemp, Warning, TEXT("AAAAAAAAAAAAAAAA"));
-
-	// check if path was already generated (for the first time)
-	if (Path.IsEmpty())
-	{
-		for (int i = 0; i < QueueLimit; i++)
-		{
-			CurrentSpawnLocation += FVector(TileSize.X, 0.0f, 0.0f);
-			SpawnTile(BasicTile);
-			UE_LOG(LogTemp, Warning, TEXT("TileSize: %f, %f, %f"), CurrentSpawnLocation.X, CurrentSpawnLocation.Y, CurrentSpawnLocation.Z);
-		}
+		UE_LOG(LogTemp, Error, TEXT("Didn't set Player Character"));
 		return;
 	}
 	
-	// check if Player's distance from the furthest Tile in the back is greater than default value
+	// check if Player's distance from the furthest Tile in the front is smaller than default value
 	AActor* LastTile = *Path.Peek();
-	float LastTileDistance = FVector::Dist(LastTile->GetActorLocation(), PlayerCharacter->GetActorLocation());
-	if (LastTileDistance > PathVanishDistance)
+	//auto loc = LastTile->GetActorLocation();
+	//UE_LOG(LogTemp, Warning, TEXT("Last Tile Loc: %f, %f, %f"), loc.X, loc.Y, loc.Z);
+	FVector CurrentSpawnLocationX = FVector(CurrentSpawnLocation.X, 0.0f, 0.0f);
+	FVector PlayerCharacterLocationX = FVector(PlayerCharacter->GetActorLocation().X, 0.0f, 0.0f);
+	float LastTileDistance = FVector::Dist(CurrentSpawnLocationX, PlayerCharacterLocationX);
+	UE_LOG(LogTemp, Warning, TEXT("Last Tile Dist: %f"), LastTileDistance);
+	UE_LOG(LogTemp, Warning, TEXT("PathVanishDistance: %f"), PathVanishDistance);
+	if (LastTileDistance < PathVanishDistance)
 	{
-		for (int i = 0; i < PathVanishDistance; i++)
+		for (int i = 0; i < TileVanishLimit; i++)
 		{
 			AActor* VanishedTile;
-			Path.Dequeue(VanishedTile); //TODO just pop? but maybe I could reuse it
+			Path.Dequeue(VanishedTile); //TODO object pooling?
+			VanishedTile->Destroy();
 			CurrentSpawnLocation += FVector(TileSize.X, 0.0f, 0.0f);
 			SpawnTile(BasicTile);
 		}
@@ -93,6 +98,7 @@ void ARunwayGeneratingActor::SpawnTile(AActor* Tile)
 
 	UClass* TileClass = Tile->GetClass();
 
-	GetWorld()->SpawnActor(TileClass, &SpawnLocation, &SpawnRotation, SpawnParams);
+	auto NewTile = GetWorld()->SpawnActor(TileClass, &SpawnLocation, &SpawnRotation, SpawnParams);
+	Path.Enqueue(NewTile);
 }
 
