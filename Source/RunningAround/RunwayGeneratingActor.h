@@ -33,8 +33,8 @@ protected:
 
 	FVector TileSize;												 // dimensions
 	float PathVanishDistance;										 // distance where tiles should be removed from the back
-	int TileVanishLimit = 3;										 // distance of PathVanishDistance in amount of tiles
-	int QueueLimit = 5;												 // max number of tiles in the queue
+	int TileVanishLimit = 1.5;										 // distance of PathVanishDistance in amount of tiles
+	int QueueLimit = 3;												 // max number of tiles in the queue
 	FVector CurrentSpawnLocation = FVector(-39.0f, -47.0f, -300.0f); // initialized to the starting location
 	TQueue<ATileActor *> Path;
 

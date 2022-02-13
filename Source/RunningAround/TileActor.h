@@ -34,7 +34,7 @@ private:
 	bool IsVanishing = false;	// if tile should be destroyed
 	float UpperBound = 3.0f;	// upper destination for tile - where it wants to end up after spawning
 	float LowerBound = -300.0f; // lower destination, where tiles vanish (Z distance from spawn location where tiles spawn)
-	float MovingSpeed = 0.1f;
+	float MovingSpeed = 2.0f;
 	FVector TargetLocation;
 	FVector SpawnLocation;
 };
