@@ -25,7 +25,7 @@ void AGameManagerActor::BeginPlay()
 void AGameManagerActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	Score += CalculateDistance();
 	//GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Green, FString::Printf(TEXT("Score: %f"), Score));
 }
