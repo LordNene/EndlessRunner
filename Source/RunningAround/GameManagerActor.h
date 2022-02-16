@@ -35,6 +35,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "GameOver Logic")
+	void GameOver();
+
+	UFUNCTION(BlueprintCallable, Category = "GameOver Logic")
+	bool IsPlayerDead();
+	// True if enemy collided with player, set in BP
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameOver Logic")
+	bool WasPlayerHit;
+
 private:
 	FVector PreviousLocation;
+	float StartingLocationZ;
+	// offset for checking if the player has fallen into the pit
+	float LocationZOffset = 2000.0f;
 };

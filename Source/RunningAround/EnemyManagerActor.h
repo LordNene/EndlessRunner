@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EnemyActor.h"
+#include "GameManagerActor.h"
 #include "EnemyManagerActor.generated.h"
 
 UENUM()
@@ -33,6 +34,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	AActor *PlayerCharacter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Manager")
+	AGameManagerActor* GameManager;
 
 	// How far from the player will be enemies spawned
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Constants")

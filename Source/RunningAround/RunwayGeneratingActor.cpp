@@ -104,3 +104,4 @@ void ARunwayGeneratingActor::SpawnTile(AActor *Tile)
 	NewTileActor->Init(NewTile, CurrentSpawnLocation);
 	Path.Enqueue(NewTileActor);
 }
+

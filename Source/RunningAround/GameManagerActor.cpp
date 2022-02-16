@@ -19,6 +19,7 @@ void AGameManagerActor::BeginPlay()
 	
 	// Set initial value for distance calculation
 	PreviousLocation = PlayerCharacter->GetActorLocation();
+	StartingLocationZ = PreviousLocation.Z;
 }
 
 // Called every frame
@@ -37,4 +38,22 @@ float AGameManagerActor::CalculateDistance()
 	FVector Distance = PreviousLocation - CurrentLoc; // Distance in cm
 	PreviousLocation = CurrentLoc;
 	return Distance.Size() / 100; // Distance in m
+}
+
+void AGameManagerActor::GameOver()
+{
+	if (HighScore < Score)
+	{
+		HighScore = Score;
+		// TODO handle saving score
+	}
+	
+}
+
+// Check if player got hit by an enemy or has fallen from the path into the pit
+bool AGameManagerActor::IsPlayerDead()
+{
+	// Right now, the player starts a bit above the tile, but the idea is to let player
+	// fall down a bit so it can be buffered by high enough offset
+	return WasPlayerHit || PlayerCharacter->GetActorLocation().Z < StartingLocationZ - LocationZOffset;
 }

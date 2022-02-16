@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
+#include "GameManagerActor.h"
 #include "EnemyActor.generated.h"
 
 UCLASS()
@@ -21,9 +21,13 @@ protected:
 	virtual void BeginPlay() override;
 	void Initialize();
 	void Move();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Manager")
+	AGameManagerActor* GameManager;
 
 private:
 	float MovingSpeed = 3.0f;

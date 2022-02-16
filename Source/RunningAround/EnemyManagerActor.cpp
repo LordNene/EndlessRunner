@@ -63,5 +63,7 @@ void AEnemyManagerActor::SpawnEnemy(EnemyType Type)
 	FActorSpawnParameters SpawnParams;
 
 	AEnemyActor* EnemyRef = GetWorld()->SpawnActor<AEnemyActor>(FlyingEnemy, SpawnLocation, SpawnRotation, SpawnParams);
+	// Set GameManager reference so collision can be handled in BP
+	EnemyRef->GameManager = GameManager;
 }
 
