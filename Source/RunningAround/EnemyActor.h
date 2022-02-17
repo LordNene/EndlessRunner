@@ -19,16 +19,21 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void Initialize();
 	void Move();
+	// Checks if the enemy is behind the player where it can disappear
+	bool IsInVanishDistance(float EnemyLocationX);
+	void Vanish();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Manager")
-	AGameManagerActor* GameManager;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Manager")
+	AGameManagerActor *GameManager;
+	AActor *PlayerCharacter;
 
 private:
 	float MovingSpeed = 3.0f;
+	float VanishingDistance = 1000.0f;
 };

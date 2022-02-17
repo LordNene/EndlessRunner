@@ -36,7 +36,14 @@ void AEnemyManagerActor::GenerateEnemies()
 	}
 
 	// Calls timer every {SpawnTimer} seconds, first one is delayed for 7 seconds
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AEnemyManagerActor::SpawnTimerFunction, SpawnTimer, true, 7.0f);
+	GetWorldTimerManager().SetTimer(TimerHandleGeneration, this, &AEnemyManagerActor::GenerateSpawnTimers, SpawnTimer, true, 7.0f);
+}
+
+void AEnemyManagerActor::GenerateSpawnTimers()
+{
+	float SpawnRange = FMath::RandRange(SpawnRangeMin, SpawnRangeMax);
+	GetWorldTimerManager().SetTimer(TimerHandleSpawn, this, &AEnemyManagerActor::SpawnTimerFunction, SpawnRange, false, 0.0f);
+	//UE_LOG(LogTemp, Warning, TEXT("Spawn interval: %f"), SpawnRange);
 }
 
 void AEnemyManagerActor::SpawnTimerFunction()
@@ -49,8 +56,6 @@ void AEnemyManagerActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//float SpawnRange = FMath::RandRange(SpawnRangeMin, SpawnRangeMax);
-	
 }
 
 void AEnemyManagerActor::SpawnEnemy(EnemyType Type)
@@ -64,6 +69,6 @@ void AEnemyManagerActor::SpawnEnemy(EnemyType Type)
 
 	AEnemyActor* EnemyRef = GetWorld()->SpawnActor<AEnemyActor>(FlyingEnemy, SpawnLocation, SpawnRotation, SpawnParams);
 	// Set GameManager reference so collision can be handled in BP
-	EnemyRef->GameManager = GameManager;
+	EnemyRef->Initialize(GameManager, PlayerCharacter);
 }
 

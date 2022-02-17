@@ -36,26 +36,30 @@ protected:
 	AActor *PlayerCharacter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Manager")
-	AGameManagerActor* GameManager;
+	AGameManagerActor *GameManager;
 
 	// How far from the player will be enemies spawned
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Constants")
 	float SpawnDistance = 2000.0f;
 	// Lower and upper bounds for spawn timer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Constants")
-	float SpawnRangeMin = 2.0f;
+	float SpawnRangeMin = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Constants")
-	float SpawnRangeMax = 5.0f;
+	float SpawnRangeMax = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Constants")
-	float SpawnTimer = 3.0f;
+	float SpawnTimer = 1.5f;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SpawnEnemy(EnemyType Type);
 
+	// Spawns TimerFunctions over randomized time range
+	void GenerateSpawnTimers();
 	// Spawns enemies over a random time interval
 	void SpawnTimerFunction();
+	// Timer handle for generating the spawn timers
+	FTimerHandle TimerHandleGeneration;
 	// Timer handle for spawning enemies
-	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandleSpawn;
 };

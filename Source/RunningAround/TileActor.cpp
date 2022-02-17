@@ -34,7 +34,7 @@ void ATileActor::Tick(float DeltaTime)
 	{
 		FVector NewLocation = FMath::VInterpTo(Tile->GetActorLocation(), TargetLocation, DeltaTime, MovingSpeed);
 		Tile->SetActorLocation(NewLocation);
-		UE_LOG(LogTemp, Warning, TEXT("Moving to: %f"), NewLocation.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("Moving to: %f"), NewLocation.Z);
 		if (IsAtTargetLocation())
 		{
 			IsMoving = false;

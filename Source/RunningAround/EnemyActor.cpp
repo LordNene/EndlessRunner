@@ -18,6 +18,12 @@ void AEnemyActor::BeginPlay()
 	
 }
 
+void AEnemyActor::Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef)
+{
+	GameManager = GameManagerRef;
+	PlayerCharacter = PlayerCharacterRef;
+}
+
 // Called every frame
 void AEnemyActor::Tick(float DeltaTime)
 {
@@ -30,5 +36,22 @@ void AEnemyActor::Move()
 {
 	FVector NewLocation = this->GetActorLocation();
 	NewLocation.X -= MovingSpeed;
+
+	if (PlayerCharacter && IsInVanishDistance(NewLocation.X))
+	{
+		Vanish();
+	}
+
 	this->SetActorLocation(NewLocation);
+}
+
+bool AEnemyActor::IsInVanishDistance(float EnemyLocationX)
+{
+	return EnemyLocationX < (PlayerCharacter->GetActorLocation().X - VanishingDistance);
+}
+
+void AEnemyActor::Vanish()
+{
+	// TODO handle vanishing using object pooling
+	Destroy();
 }
