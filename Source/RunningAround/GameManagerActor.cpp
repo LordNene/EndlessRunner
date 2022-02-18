@@ -42,12 +42,8 @@ float AGameManagerActor::CalculateDistance()
 
 void AGameManagerActor::GameOver()
 {
-	if (HighScore < Score)
-	{
-		HighScore = Score;
-		// TODO handle saving score
-	}
-	
+	// Saving and loading of High score is handled in Blueprints
+	// Keeping this method for the future
 }
 
 // Check if player got hit by an enemy or has fallen from the path into the pit

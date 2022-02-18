@@ -26,10 +26,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Actors")
 	AActor *PlayerCharacter;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Stats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Stats")
 	float Score = 0.0f; // Distance travelled by Player from the start
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Stats")
-	float HighScore = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Stats")
+	float HighScore = 0.0f; // Set in blueprints on save game
 
 public:	
 	// Called every frame
