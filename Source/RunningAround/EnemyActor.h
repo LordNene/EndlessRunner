@@ -27,13 +27,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef);
+	void Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef, bool Movable);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Manager")
 	AGameManagerActor *GameManager;
 	AActor *PlayerCharacter;
 
 private:
+	bool IsMovable = true;
 	float MovingSpeed = 3.0f;
 	float VanishingDistance = 1000.0f;
 };

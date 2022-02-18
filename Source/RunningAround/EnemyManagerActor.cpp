@@ -29,7 +29,7 @@ void AEnemyManagerActor::GenerateEnemies()
 		return;
 	}
 
-	if (!FlyingEnemy)
+	if (!FlyingEnemy || !GroundedEnemy)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Didn't set an enemy blueprint."));
 		return;
@@ -41,14 +41,21 @@ void AEnemyManagerActor::GenerateEnemies()
 
 void AEnemyManagerActor::GenerateSpawnTimers()
 {
-	float SpawnRange = FMath::RandRange(SpawnRangeMin, SpawnRangeMax);
-	GetWorldTimerManager().SetTimer(TimerHandleSpawn, this, &AEnemyManagerActor::SpawnTimerFunction, SpawnRange, false, 0.0f);
+	float SpawnRangeGrounded = FMath::RandRange(SpawnRangeMin, SpawnRangeMax);
+	GetWorldTimerManager().SetTimer(TimerHandleSpawnGrounded, this, &AEnemyManagerActor::SpawnTimerGrounded, SpawnRangeGrounded, false, 0.0f);
+	float SpawnRangeFlying = FMath::RandRange(SpawnRangeMin, SpawnRangeMax);
+	GetWorldTimerManager().SetTimer(TimerHandleSpawnFlying, this, &AEnemyManagerActor::SpawnTimerFlying, SpawnRangeFlying, false, 0.0f);
 	//UE_LOG(LogTemp, Warning, TEXT("Spawn interval: %f"), SpawnRange);
 }
 
-void AEnemyManagerActor::SpawnTimerFunction()
+void AEnemyManagerActor::SpawnTimerFlying()
 {
-	SpawnEnemy(EnemyType::Flying);
+	SpawnEnemyByType(EnemyType::Flying);
+}
+
+void AEnemyManagerActor::SpawnTimerGrounded()
+{
+	SpawnEnemyByType(EnemyType::Grounded);
 }
 
 // Called every frame
@@ -58,17 +65,59 @@ void AEnemyManagerActor::Tick(float DeltaTime)
 
 }
 
-void AEnemyManagerActor::SpawnEnemy(EnemyType Type)
+void AEnemyManagerActor::SpawnEnemyByType(EnemyType Type)
+{
+	switch (Type)
+	{
+		case EnemyType::Flying:
+			SpawnFlyingEnemy();
+			break;
+		case EnemyType::Grounded:
+			SpawnGroundedEnemy();
+			break;
+	}
+}
+
+void AEnemyManagerActor::SpawnFlyingEnemy()
 {
 	FVector SpawnLocation = PlayerCharacter->GetActorLocation();
-	SpawnLocation.X += SpawnDistance;
+	SpawnLocation.X += SpawnDistanceFlying;
+
+	// Randomize Y Location
+	float YRange = FMath::RandRange(TileRange[0], TileRange[1]);
+	SpawnLocation.Y = YRange;
+
+	// Pick one of the spawn heights at random
+	int Height = rand() % 2;
+	SpawnLocation.Z = Height == 0 ? FlyingSpawnHeight1 : FlyingSpawnHeight2;
+
+	SpawnEnemy(FlyingEnemy, SpawnLocation, true);
+}
+
+void AEnemyManagerActor::SpawnGroundedEnemy()
+{
+	FVector SpawnLocation = PlayerCharacter->GetActorLocation();
+	SpawnLocation.X += SpawnDistanceGrounded;
+
+	// Randomize Y Location
+	float YRange = FMath::RandRange(TileRange[0], TileRange[1]);
+	SpawnLocation.Y = YRange;
+
+	// Use default Z Location for grounded enemies
+	SpawnLocation.Z = GroundedSpawnHeight;
+
+	// for now, grounded enemies shouldn't move
+	SpawnEnemy(GroundedEnemy, SpawnLocation, false);
+}
+
+void AEnemyManagerActor::SpawnEnemy(UClass *EnemyToSpawn, FVector SpawnLocation, bool IsMovable)
+{
 	// Turn enemy to face the player
 	FRotator SpawnRotation = PlayerCharacter->GetActorRotation();
 	SpawnRotation.Yaw += 180;
 	FActorSpawnParameters SpawnParams;
 
-	AEnemyActor* EnemyRef = GetWorld()->SpawnActor<AEnemyActor>(FlyingEnemy, SpawnLocation, SpawnRotation, SpawnParams);
+	AEnemyActor* EnemyRef = GetWorld()->SpawnActor<AEnemyActor>(EnemyToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 	// Set GameManager reference so collision can be handled in BP
-	EnemyRef->Initialize(GameManager, PlayerCharacter);
+	EnemyRef->Initialize(GameManager, PlayerCharacter, IsMovable);
 }
-

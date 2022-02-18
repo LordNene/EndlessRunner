@@ -18,10 +18,11 @@ void AEnemyActor::BeginPlay()
 	
 }
 
-void AEnemyActor::Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef)
+void AEnemyActor::Initialize(AGameManagerActor *GameManagerRef, AActor *PlayerCharacterRef, bool Movable)
 {
 	GameManager = GameManagerRef;
 	PlayerCharacter = PlayerCharacterRef;
+	IsMovable = Movable;
 }
 
 // Called every frame
@@ -35,7 +36,10 @@ void AEnemyActor::Tick(float DeltaTime)
 void AEnemyActor::Move()
 {
 	FVector NewLocation = this->GetActorLocation();
-	NewLocation.X -= MovingSpeed;
+	if (IsMovable)
+	{
+		NewLocation.X -= MovingSpeed;
+	}
 
 	if (PlayerCharacter && IsInVanishDistance(NewLocation.X))
 	{
