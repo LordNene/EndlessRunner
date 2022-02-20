@@ -1,6 +1,6 @@
 # EndlessRunner
 
-Simple 3D endless running game in Unreal Engine using its Third Person Template. The game generates tiles along the path and every few seconds spawns enemies in the distance. Loosely inspired by the Chrome Dino, made for the purposes of familiarizing myself with UE4.
+Simple 3D endless running game in Unreal Engine using its Third Person Template. The game generates tiles along the path and every few seconds spawns enemies in the distance. Loosely inspired by the Chrome Dino, made for the purposes of familiarizing myself with UE4 and to create something without tutorials ([mostly](https://www.unrealengine.com/en-US/onlinelearning-courses/your-first-hour-with-umg)).
 
 ![Demo gif](img/EndlessRunnerDemo.gif)
 
