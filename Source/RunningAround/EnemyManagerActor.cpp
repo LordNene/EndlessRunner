@@ -113,8 +113,7 @@ void AEnemyManagerActor::SpawnGroundedEnemy()
 void AEnemyManagerActor::SpawnEnemy(UClass *EnemyToSpawn, FVector SpawnLocation, bool IsMovable)
 {
 	// Turn enemy to face the player
-	FRotator SpawnRotation = PlayerCharacter->GetActorRotation();
-	SpawnRotation.Yaw += 180;
+	FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnParams;
 
 	AEnemyActor* EnemyRef = GetWorld()->SpawnActor<AEnemyActor>(EnemyToSpawn, SpawnLocation, SpawnRotation, SpawnParams);

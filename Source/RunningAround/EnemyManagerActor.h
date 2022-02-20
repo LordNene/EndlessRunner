@@ -45,7 +45,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Coordinates")
 	float SpawnDistanceFlying = 2000.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Coordinates")
-	float SpawnDistanceGrounded = 1000.0f;
+	float SpawnDistanceGrounded = 800.0f;
 	// The two possible Z coordinates of Spawn Location for the Flying enemies
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Coordinates")
 	float FlyingSpawnHeight1 = 150.0f; // Can be jumped over
